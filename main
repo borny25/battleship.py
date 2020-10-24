@@ -1,0 +1,124 @@
+from random import randint
+
+board = []
+battleship_row = []
+battleship_col = []
+destroyer_row = []
+destroyer_col = []
+
+for x in range(0, 5):
+  board.append(["O"] * 5)
+
+def print_board(board):
+  for row in board:
+	print " ".join(row)
+
+def random_row(board):
+  return randint(0, len(board) - 1)
+
+def random_col(board):
+  return randint(0, len(board) - 1)
+
+
+def generate_ships():
+	battleship = 3
+	destroyer = 1
+	battleship_row = [random_row(board)]
+	battleship_col = [random_col(board)]
+	destroyer_row = [random_row(board)]
+	destroyer_col = [random_col(board)]
+	print battleship_col
+	print battleship_row
+	x = randint(1,2)
+	if x == 1:
+		battleship_col = [battleship_col[0], battleship_col[0], battleship_col[0]]
+		if battleship_row[0] <=2:
+			battleship_row = [battleship_row[0], battleship_row[0] + 1, battleship_row[0] + 2]
+		elif battleship_row[0] > 2:
+			battleship_row = [battleship_row[0], battleship_row[0] - 1, battleship_row[0] - 2]
+		while destroyer_row[0] in battleship_row:
+			destroyer_row = [random_row(board)]
+		while destroyer_col[0] in battleship_row:
+			destroyer_col = [random_row(board)]
+		for i in battleship_row:	
+			board[i][battleship_col[0]] = "B"
+
+	else:
+		battleship_row = [battleship_row[0], battleship_row[0], battleship_row[0]]
+		if battleship_col[0] <=2:
+			battleship_col = [battleship_col[0], battleship_col[0] + 1, battleship_col[0] + 2]
+		elif battleship_col[0] > 2:
+			battleship_col = [battleship_col[0], battleship_col[0] - 1, battleship_col[0] - 2]
+		while destroyer_row[0] in battleship_col:
+			destroyer_row = [random_row(board)]
+		while destroyer_col[0] in battleship_col:
+			destroyer_col = [random_row(board)]
+		for i in battleship_col:	
+			board[battleship_row[0]][i] = "B"
+
+	board[destroyer_row[0]][destroyer_col[0]] = "D"
+	print battleship_col
+	print battleship_row	
+
+
+
+
+#battleship_row, battleship_col, destroyer_row, destroyer_col = generate_ships()
+generate_ships()
+
+print 'x'
+print battleship_col
+print destroyer_col
+
+print_board(board)
+
+
+turn = 0
+while turn < 5:
+  print "Turn", turn + 1
+  guess_row = int(raw_input("Guess Row: ")) - 1
+  guess_col = int(raw_input("Guess Col: ")) - 1
+
+  if guess_row in battleship_row and guess_col in battleship_col:
+	pop.battleship_row(guess_row)
+	pop.battleship_col(guess_col)
+	battleship = battleship - 1
+	board[guess_row][guess_col] = "H"
+	print_board(board)
+	if len(battleship_row) == 0 and len(battleship_col) == 0:
+		print "Congratulations, you sunk my battleship!"
+	else:
+		print "Congratulations! That's a hit on my battleship!"
+	
+
+  elif guess_row == destroyer_row and guess_col == destroyer_col:
+	print "Congratulations! You sank my destroyer!"
+	board[guess_row][guess_col] = "H"  
+	destroyer = 0
+	print_board(board)
+	if (battleship == 0) and (destroyer == 0):
+		print "Congratulations, you won!"
+		break
+	else:
+		print "Still one more to go!"
+		turn = turn + 1
+
+  if (battleship == 0) and (destroyer == 0):
+  	print "Congratulations, you won!"
+  	break
+  else:
+  	print "Still more out there!"
+	turn = turn + 1
+
+else:
+	if guess_row not in range(5) or	guess_col not in range(5):
+	  print "Oops, that's not even in the ocean, you best try again"
+	elif board[guess_row][guess_col] == "X":
+	  print( "You guessed that one already, but I won't take a turn off you" )
+	else:
+	  print "You missed!"
+	  board[guess_row][guess_col] = "X"
+	  turn = turn + 1
+	if (turn == 5):
+	  print "Game Over"
+	print_board(board)
